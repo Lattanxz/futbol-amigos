@@ -4,8 +4,10 @@ using FutbolAmigos.Api.Data;
 using FutbolAmigos.Api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,9 +17,10 @@ builder.Services.AddControllers()
     .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 builder.Services.AddOpenApi();
 
-var connectionString = builder.Configuration.GetConnectionString("Default")
-    ?? throw new InvalidOperationException(
-        "Falta configurar ConnectionStrings:Default. En desarrollo: dotnet user-secrets set \"ConnectionStrings:Default\" \"<connection-string-de-neon>\"");
+var connectionString = NormalizeConnectionString(
+    builder.Configuration.GetConnectionString("Default")
+        ?? throw new InvalidOperationException(
+            "Falta configurar ConnectionStrings:Default. En desarrollo: dotnet user-secrets set \"ConnectionStrings:Default\" \"<connection-string-de-neon>\""));
 
 builder.Services.AddDbContext<FutbolAmigosDbContext>(options => options.UseNpgsql(connectionString));
 
@@ -96,3 +99,35 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
+
+// Neon (y otros proveedores) entregan el connection string como URI (postgresql://user:pass@host/db?sslmode=require),
+// pero NpgsqlConnectionStringBuilder solo entiende el formato Keyword=Value. Convertimos si hace falta.
+static string NormalizeConnectionString(string value)
+{
+    if (!value.StartsWith("postgres://", StringComparison.OrdinalIgnoreCase)
+        && !value.StartsWith("postgresql://", StringComparison.OrdinalIgnoreCase))
+    {
+        return value;
+    }
+
+    var uri = new Uri(value);
+    var userInfo = uri.UserInfo.Split(':', 2);
+
+    var npgsqlBuilder = new NpgsqlConnectionStringBuilder
+    {
+        Host = uri.Host,
+        Port = uri.Port > 0 ? uri.Port : 5432,
+        Database = uri.AbsolutePath.TrimStart('/'),
+        Username = Uri.UnescapeDataString(userInfo[0]),
+        Password = userInfo.Length > 1 ? Uri.UnescapeDataString(userInfo[1]) : null,
+    };
+
+    var query = QueryHelpers.ParseQuery(uri.Query);
+    if (query.TryGetValue("sslmode", out var sslMode)
+        && Enum.TryParse<SslMode>(sslMode.ToString(), ignoreCase: true, out var parsedSslMode))
+    {
+        npgsqlBuilder.SslMode = parsedSslMode;
+    }
+
+    return npgsqlBuilder.ConnectionString;
+}
