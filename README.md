@@ -15,7 +15,7 @@ Diseño mobile-first, pensado para cargarse desde el celular apenas termina el p
 
 ## Stack
 
-- **Backend**: ASP.NET Core (.NET 10) + Entity Framework Core + SQLite, autenticación JWT.
+- **Backend**: ASP.NET Core (.NET 10) + Entity Framework Core + PostgreSQL (hosteado en [Neon](https://neon.tech)), autenticación JWT.
 - **Frontend**: React + Vite + TypeScript + Tailwind CSS.
 
 ## Cómo clonar y abrir en VS Code
@@ -52,12 +52,15 @@ cd backend
 dotnet run --urls http://localhost:5033
 ```
 
-La primera vez que corre crea sola la base de datos SQLite (`backend/futbolamigos.db`) con las migraciones de Entity Framework. También necesita una clave para firmar los tokens de login, que se configura una sola vez con:
+La base de datos es un proyecto de PostgreSQL en Neon (compartido por todo el grupo, no local). Antes de correr el backend por primera vez hay que configurar dos secretos (una sola vez, quedan guardados en tu máquina, nunca se suben al repo):
 
 ```bash
 cd backend
+dotnet user-secrets set "ConnectionStrings:Default" "<connection-string-de-neon>"
 dotnet user-secrets set "Jwt:Key" "<una-clave-larga-y-secreta>"
 ```
+
+El connection string de Neon lo sacás desde [console.neon.tech](https://console.neon.tech) → tu proyecto → botón "Connect" (formato `postgresql://usuario:password@host/basededatos?sslmode=require`). Pedíselo a quien creó el proyecto en Neon si no tenés acceso. Al arrancar, el backend aplica solo las migraciones pendientes contra esa base.
 
 **Frontend** (en `http://localhost:5173`):
 

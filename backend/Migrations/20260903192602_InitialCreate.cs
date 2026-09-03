@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -15,11 +16,11 @@ namespace FutbolAmigos.Api.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Nombre = table.Column<string>(type: "TEXT", nullable: false),
-                    Email = table.Column<string>(type: "TEXT", nullable: false),
-                    PasswordHash = table.Column<string>(type: "TEXT", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Nombre = table.Column<string>(type: "text", nullable: false),
+                    Email = table.Column<string>(type: "text", nullable: false),
+                    PasswordHash = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -30,13 +31,13 @@ namespace FutbolAmigos.Api.Migrations
                 name: "Matches",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Fecha = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Lugar = table.Column<string>(type: "TEXT", nullable: false),
-                    GolesEquipoA = table.Column<int>(type: "INTEGER", nullable: false),
-                    GolesEquipoB = table.Column<int>(type: "INTEGER", nullable: false),
-                    CreadoPorUserId = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Fecha = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Lugar = table.Column<string>(type: "text", nullable: false),
+                    GolesEquipoA = table.Column<int>(type: "integer", nullable: false),
+                    GolesEquipoB = table.Column<int>(type: "integer", nullable: false),
+                    CreadoPorUserId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -53,13 +54,13 @@ namespace FutbolAmigos.Api.Migrations
                 name: "Players",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Nombre = table.Column<string>(type: "TEXT", nullable: false),
-                    Apodo = table.Column<string>(type: "TEXT", nullable: true),
-                    FotoUrl = table.Column<string>(type: "TEXT", nullable: true),
-                    PosicionHabitual = table.Column<string>(type: "TEXT", nullable: true),
-                    UserId = table.Column<int>(type: "INTEGER", nullable: true)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Nombre = table.Column<string>(type: "text", nullable: false),
+                    Apodo = table.Column<string>(type: "text", nullable: true),
+                    FotoUrl = table.Column<string>(type: "text", nullable: true),
+                    PosicionHabitual = table.Column<string>(type: "text", nullable: true),
+                    UserId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -76,11 +77,11 @@ namespace FutbolAmigos.Api.Migrations
                 name: "MatchTeams",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    MatchId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Equipo = table.Column<int>(type: "INTEGER", nullable: false),
-                    Formacion = table.Column<string>(type: "TEXT", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    MatchId = table.Column<int>(type: "integer", nullable: false),
+                    Equipo = table.Column<int>(type: "integer", nullable: false),
+                    Formacion = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -97,12 +98,12 @@ namespace FutbolAmigos.Api.Migrations
                 name: "Cards",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    MatchId = table.Column<int>(type: "INTEGER", nullable: false),
-                    PlayerId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Tipo = table.Column<int>(type: "INTEGER", nullable: false),
-                    Minuto = table.Column<int>(type: "INTEGER", nullable: true)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    MatchId = table.Column<int>(type: "integer", nullable: false),
+                    PlayerId = table.Column<int>(type: "integer", nullable: false),
+                    Tipo = table.Column<int>(type: "integer", nullable: false),
+                    Minuto = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -125,14 +126,14 @@ namespace FutbolAmigos.Api.Migrations
                 name: "Goals",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    MatchId = table.Column<int>(type: "INTEGER", nullable: false),
-                    PlayerId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Equipo = table.Column<int>(type: "INTEGER", nullable: false),
-                    Minuto = table.Column<int>(type: "INTEGER", nullable: true),
-                    Tipo = table.Column<int>(type: "INTEGER", nullable: false),
-                    AsistenciaPlayerId = table.Column<int>(type: "INTEGER", nullable: true)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    MatchId = table.Column<int>(type: "integer", nullable: false),
+                    PlayerId = table.Column<int>(type: "integer", nullable: false),
+                    Equipo = table.Column<int>(type: "integer", nullable: false),
+                    Minuto = table.Column<int>(type: "integer", nullable: true),
+                    Tipo = table.Column<int>(type: "integer", nullable: false),
+                    AsistenciaPlayerId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -161,12 +162,12 @@ namespace FutbolAmigos.Api.Migrations
                 name: "MatchPlayers",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    MatchId = table.Column<int>(type: "INTEGER", nullable: false),
-                    PlayerId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Equipo = table.Column<int>(type: "INTEGER", nullable: false),
-                    PosicionSlot = table.Column<string>(type: "TEXT", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    MatchId = table.Column<int>(type: "integer", nullable: false),
+                    PlayerId = table.Column<int>(type: "integer", nullable: false),
+                    Equipo = table.Column<int>(type: "integer", nullable: false),
+                    PosicionSlot = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {

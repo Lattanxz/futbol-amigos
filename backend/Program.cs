@@ -14,8 +14,11 @@ builder.Services.AddControllers()
     .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 builder.Services.AddOpenApi();
 
-builder.Services.AddDbContext<FutbolAmigosDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("Default") ?? "Data Source=futbolamigos.db"));
+var connectionString = builder.Configuration.GetConnectionString("Default")
+    ?? throw new InvalidOperationException(
+        "Falta configurar ConnectionStrings:Default. En desarrollo: dotnet user-secrets set \"ConnectionStrings:Default\" \"<connection-string-de-neon>\"");
+
+builder.Services.AddDbContext<FutbolAmigosDbContext>(options => options.UseNpgsql(connectionString));
 
 builder.Services.AddScoped<JwtTokenService>();
 
