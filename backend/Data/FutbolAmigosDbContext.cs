@@ -1,0 +1,86 @@
+using FutbolAmigos.Api.Models;
+using Microsoft.EntityFrameworkCore;
+
+namespace FutbolAmigos.Api.Data;
+
+public class FutbolAmigosDbContext(DbContextOptions<FutbolAmigosDbContext> options) : DbContext(options)
+{
+    public DbSet<User> Users => Set<User>();
+    public DbSet<Player> Players => Set<Player>();
+    public DbSet<Match> Matches => Set<Match>();
+    public DbSet<MatchTeam> MatchTeams => Set<MatchTeam>();
+    public DbSet<MatchPlayer> MatchPlayers => Set<MatchPlayer>();
+    public DbSet<Goal> Goals => Set<Goal>();
+    public DbSet<Card> Cards => Set<Card>();
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<User>()
+            .HasIndex(u => u.Email)
+            .IsUnique();
+
+        modelBuilder.Entity<Player>()
+            .HasOne(p => p.User)
+            .WithMany(u => u.Players)
+            .HasForeignKey(p => p.UserId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<Match>()
+            .HasOne(m => m.CreadoPorUser)
+            .WithMany(u => u.MatchesCreated)
+            .HasForeignKey(m => m.CreadoPorUserId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<MatchTeam>()
+            .HasOne(mt => mt.Match)
+            .WithMany(m => m.Teams)
+            .HasForeignKey(mt => mt.MatchId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<MatchPlayer>()
+            .HasOne(mp => mp.Match)
+            .WithMany(m => m.MatchPlayers)
+            .HasForeignKey(mp => mp.MatchId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<MatchPlayer>()
+            .HasOne(mp => mp.Player)
+            .WithMany()
+            .HasForeignKey(mp => mp.PlayerId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<MatchPlayer>()
+            .HasIndex(mp => new { mp.MatchId, mp.PlayerId })
+            .IsUnique();
+
+        modelBuilder.Entity<Goal>()
+            .HasOne(g => g.Match)
+            .WithMany(m => m.Goals)
+            .HasForeignKey(g => g.MatchId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Goal>()
+            .HasOne(g => g.Player)
+            .WithMany()
+            .HasForeignKey(g => g.PlayerId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Goal>()
+            .HasOne(g => g.AsistenciaPlayer)
+            .WithMany()
+            .HasForeignKey(g => g.AsistenciaPlayerId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Card>()
+            .HasOne(c => c.Match)
+            .WithMany(m => m.Cards)
+            .HasForeignKey(c => c.MatchId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Card>()
+            .HasOne(c => c.Player)
+            .WithMany()
+            .HasForeignKey(c => c.PlayerId)
+            .OnDelete(DeleteBehavior.Restrict);
+    }
+}

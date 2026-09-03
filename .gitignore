@@ -1,0 +1,21 @@
+## Backend (.NET)
+backend/bin/
+backend/obj/
+backend/*.db
+backend/*.db-shm
+backend/*.db-wal
+
+## Frontend (Node/Vite)
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+## Editors / OS
+.vs/
+.vscode/
+*.user
+.DS_Store
+Thumbs.db
+
+## Claude Code
+.claude/
