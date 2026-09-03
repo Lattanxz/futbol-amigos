@@ -15,8 +15,8 @@ Diseño mobile-first, pensado para cargarse desde el celular apenas termina el p
 
 ## Stack
 
-- **Backend**: ASP.NET Core (.NET 10) + Entity Framework Core + PostgreSQL (hosteado en [Neon](https://neon.tech)), autenticación JWT.
-- **Frontend**: React + Vite + TypeScript + Tailwind CSS.
+- **Backend**: ASP.NET Core (.NET 10) + Entity Framework Core + PostgreSQL (hosteado en [Neon](https://neon.tech)), autenticación JWT. Deployado en [Render](https://render.com) (Docker).
+- **Frontend**: React + Vite + TypeScript + Tailwind CSS. Deployado en [Vercel](https://vercel.com).
 
 ## Cómo clonar y abrir en VS Code
 
@@ -71,6 +71,20 @@ npm run dev
 ```
 
 Con ambos corriendo, entrás a `http://localhost:5173`, te registrás con tu nombre/email/contraseña y ya podés empezar a cargar jugadores y partidos.
+
+## Deploy
+
+- **API**: https://futbol-amigos-api.onrender.com (Render, plan free — el servicio se duerme a los 15 min sin uso, la primera request después de eso tarda ~30-50s en responder mientras arranca de nuevo).
+- **App**: https://frontend-xi-drab-4s5d2dfmtd.vercel.app (Vercel).
+
+Ambos quedaron conectados al repo de GitHub: cada push a `master` dispara un redeploy automático de los dos.
+
+Variables de entorno configuradas en el dashboard de cada plataforma (no están en el repo):
+
+- Render (`futbol-amigos-api` → Environment): `ConnectionStrings__Default` (connection string de Neon), `Jwt__Key`, `Frontend__Url` (la URL de Vercel, para habilitar CORS).
+- Vercel (`frontend` → Settings → Environment Variables): `VITE_API_URL` (la URL de Render + `/api`).
+
+El build de Render usa `backend/Dockerfile` (definido en `render.yaml`); el de Vercel es el build estándar de Vite (`frontend/vercel.json` agrega el rewrite necesario para que las rutas de React Router funcionen).
 
 ## Estado del proyecto
 
