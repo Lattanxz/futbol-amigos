@@ -3,6 +3,7 @@ import { useAuth } from "../../auth/AuthContext"
 
 const links = [
   { to: "/", label: "Inicio" },
+  { to: "/proximos", label: "Próximos" },
   { to: "/jugadores", label: "Jugadores" },
   { to: "/partidos", label: "Historial" },
   { to: "/ranking", label: "Ranking" },

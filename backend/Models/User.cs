@@ -9,4 +9,5 @@ public class User
 
     public ICollection<Player> Players { get; set; } = new List<Player>();
     public ICollection<Match> MatchesCreated { get; set; } = new List<Match>();
+    public ICollection<ScheduledMatch> ScheduledMatchesCreated { get; set; } = new List<ScheduledMatch>();
 }

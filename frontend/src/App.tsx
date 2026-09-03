@@ -10,6 +10,8 @@ import { MatchWizardPage } from "./pages/MatchWizard/MatchWizardPage"
 import { PlayerProfilePage } from "./pages/PlayerProfilePage"
 import { PlayersListPage } from "./pages/PlayersListPage"
 import { RankingPage } from "./pages/RankingPage"
+import { ScheduledMatchDetailPage } from "./pages/ScheduledMatches/ScheduledMatchDetailPage"
+import { ScheduledMatchesListPage } from "./pages/ScheduledMatches/ScheduledMatchesListPage"
 
 function App() {
   return (
@@ -27,6 +29,8 @@ function App() {
             <Route path="/partidos/:id/editar" element={<MatchWizardPage />} />
             <Route path="/partidos/:id" element={<MatchDetailPage />} />
             <Route path="/ranking" element={<RankingPage />} />
+            <Route path="/proximos" element={<ScheduledMatchesListPage />} />
+            <Route path="/proximos/:id" element={<ScheduledMatchDetailPage />} />
           </Route>
         </Route>
 

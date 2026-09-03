@@ -19,3 +19,10 @@ public enum CardType
     Amarilla,
     Roja
 }
+
+public enum AttendanceStatus
+{
+    Va,
+    Duda,
+    No
+}

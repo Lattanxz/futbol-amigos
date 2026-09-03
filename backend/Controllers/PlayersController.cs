@@ -105,11 +105,12 @@ public class PlayersController(FutbolAmigosDbContext db) : ControllerBase
 
         var tieneHistorial = await db.MatchPlayers.AnyAsync(mp => mp.PlayerId == id)
             || await db.Goals.AnyAsync(g => g.PlayerId == id || g.AsistenciaPlayerId == id)
-            || await db.Cards.AnyAsync(c => c.PlayerId == id);
+            || await db.Cards.AnyAsync(c => c.PlayerId == id)
+            || await db.Attendances.AnyAsync(a => a.PlayerId == id);
 
         if (tieneHistorial)
         {
-            return Conflict("No se puede eliminar un jugador que ya tiene partidos, goles o tarjetas registrados.");
+            return Conflict("No se puede eliminar un jugador que ya tiene partidos, goles, tarjetas o confirmaciones de asistencia registrados.");
         }
 
         db.Players.Remove(player);

@@ -6,6 +6,7 @@ import { Button } from "../components/common/Button"
 import { Card } from "../components/common/Card"
 import { Modal } from "../components/common/Modal"
 import { Pitch } from "../components/pitch/Pitch"
+import { formatFechaLarga } from "../lib/date"
 import type { MatchDetailDto } from "../types"
 
 const GOAL_TYPE_LABEL: Record<string, string> = {
@@ -13,15 +14,6 @@ const GOAL_TYPE_LABEL: Record<string, string> = {
   Penal: "(penal)",
   TiroLibre: "(tiro libre)",
   EnContra: "(en contra)",
-}
-
-function formatFecha(iso: string) {
-  return new Date(iso).toLocaleDateString("es-AR", {
-    weekday: "long",
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
-  })
 }
 
 export function MatchDetailPage() {
@@ -55,7 +47,7 @@ export function MatchDetailPage() {
   return (
     <div className="flex flex-col gap-4">
       <Card>
-        <p className="text-sm capitalize text-cancha-950/60">{formatFecha(match.fecha)}</p>
+        <p className="text-sm capitalize text-cancha-950/60">{formatFechaLarga(match.fecha)}</p>
         <p className="text-sm text-cancha-950/60">{match.lugar}</p>
         <div className="mt-2 flex items-center justify-center gap-6">
           <span className="text-3xl font-bold text-cancha-700">{match.golesEquipoA}</span>

@@ -4,11 +4,8 @@ import { getMatches, type MatchFilters } from "../api/matches"
 import { getPlayers } from "../api/players"
 import { Card } from "../components/common/Card"
 import { EmptyState } from "../components/common/EmptyState"
+import { formatFechaConAnio } from "../lib/date"
 import type { MatchListDto, PlayerListDto } from "../types"
-
-function formatFecha(iso: string) {
-  return new Date(iso).toLocaleDateString("es-AR", { day: "2-digit", month: "short", year: "numeric" })
-}
 
 export function MatchHistoryPage() {
   const [players, setPlayers] = useState<PlayerListDto[]>([])
@@ -81,7 +78,7 @@ export function MatchHistoryPage() {
                 <Card className="flex items-center justify-between hover:border-cancha-300">
                   <div>
                     <p className="text-sm text-cancha-950/60">
-                      {formatFecha(m.fecha)} · {m.lugar}
+                      {formatFechaConAnio(m.fecha)} · {m.lugar}
                     </p>
                     <p className="text-xs text-cancha-950/40">Cargado por {m.creadoPorNombre}</p>
                   </div>

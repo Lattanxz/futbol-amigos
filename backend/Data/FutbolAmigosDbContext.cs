@@ -12,6 +12,8 @@ public class FutbolAmigosDbContext(DbContextOptions<FutbolAmigosDbContext> optio
     public DbSet<MatchPlayer> MatchPlayers => Set<MatchPlayer>();
     public DbSet<Goal> Goals => Set<Goal>();
     public DbSet<Card> Cards => Set<Card>();
+    public DbSet<ScheduledMatch> ScheduledMatches => Set<ScheduledMatch>();
+    public DbSet<Attendance> Attendances => Set<Attendance>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -82,5 +84,27 @@ public class FutbolAmigosDbContext(DbContextOptions<FutbolAmigosDbContext> optio
             .WithMany()
             .HasForeignKey(c => c.PlayerId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<ScheduledMatch>()
+            .HasOne(sm => sm.CreadoPorUser)
+            .WithMany(u => u.ScheduledMatchesCreated)
+            .HasForeignKey(sm => sm.CreadoPorUserId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Attendance>()
+            .HasOne(a => a.ScheduledMatch)
+            .WithMany(sm => sm.Attendances)
+            .HasForeignKey(a => a.ScheduledMatchId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Attendance>()
+            .HasOne(a => a.Player)
+            .WithMany()
+            .HasForeignKey(a => a.PlayerId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Attendance>()
+            .HasIndex(a => new { a.ScheduledMatchId, a.PlayerId })
+            .IsUnique();
     }
 }
