@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: futbol-amigos-api
+    runtime: docker
+    plan: free
+    region: ohio
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: ConnectionStrings__Default
+        sync: false
+      - key: Jwt__Key
+        sync: false
+      - key: Frontend__Url
+        sync: false
