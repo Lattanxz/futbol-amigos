@@ -1,5 +1,6 @@
 using System.Text;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 using FutbolAmigos.Api.Data;
 using FutbolAmigos.Api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -57,11 +58,18 @@ if (!string.IsNullOrWhiteSpace(frontendUrl))
     allowedOrigins.Add(frontendUrl.TrimEnd('/'));
 }
 
+// Vercel genera una URL única por cada deploy (ej. frontend-<hash>-<team>.vercel.app),
+// además del dominio fijo del proyecto. En vez de tener que actualizar Frontend:Url
+// a mano cada vez, aceptamos cualquier deploy de este mismo proyecto de Vercel.
+var vercelDeployOrigin = new Regex(@"^https://frontend-[a-z0-9-]+\.vercel\.app$", RegexOptions.IgnoreCase);
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(FrontendCorsPolicy, policy =>
     {
-        policy.WithOrigins(allowedOrigins.ToArray())
+        policy.SetIsOriginAllowed(origin =>
+                allowedOrigins.Contains(origin, StringComparer.OrdinalIgnoreCase)
+                || vercelDeployOrigin.IsMatch(origin))
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
