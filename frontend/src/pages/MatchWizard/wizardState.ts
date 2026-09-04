@@ -38,9 +38,9 @@ export function newRowKey() {
 }
 
 export function emptyWizardState(): WizardState {
-  const now = new Date()
-  now.setSeconds(0, 0)
-  const localIso = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16)
+  const today = new Date()
+  const localDate = new Date(today.getTime() - today.getTimezoneOffset() * 60000).toISOString().split("T")[0]
+  const localIso = `${localDate}T20:00`
 
   return {
     fecha: localIso,
