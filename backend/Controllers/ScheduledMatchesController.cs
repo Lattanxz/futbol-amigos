@@ -23,7 +23,8 @@ public class ScheduledMatchesController(FutbolAmigosDbContext db) : ControllerBa
 
         if (!incluirPasados)
         {
-            query = query.Where(sm => sm.Fecha >= DateTime.UtcNow);
+            var ahora = DateTime.Now;
+            query = query.Where(sm => sm.Fecha >= ahora);
         }
 
         var totalJugadores = await db.Players.CountAsync();
