@@ -33,6 +33,14 @@ public class FutbolAmigosDbContext(DbContextOptions<FutbolAmigosDbContext> optio
             .HasForeignKey(m => m.CreadoPorUserId)
             .OnDelete(DeleteBehavior.Restrict);
 
+        // La app no maneja zonas horarias: Fecha es siempre el horario local "de pared"
+        // tal cual lo tipea el usuario (viene de un <input type="datetime-local">, sin
+        // offset). Se mapea a "timestamp without time zone" en vez del timestamptz por
+        // default para no forzar un Kind=Utc en Npgsql ni correr el horario al mostrarlo.
+        modelBuilder.Entity<Match>()
+            .Property(m => m.Fecha)
+            .HasColumnType("timestamp without time zone");
+
         modelBuilder.Entity<MatchTeam>()
             .HasOne(mt => mt.Match)
             .WithMany(m => m.Teams)
@@ -90,6 +98,10 @@ public class FutbolAmigosDbContext(DbContextOptions<FutbolAmigosDbContext> optio
             .WithMany(u => u.ScheduledMatchesCreated)
             .HasForeignKey(sm => sm.CreadoPorUserId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<ScheduledMatch>()
+            .Property(sm => sm.Fecha)
+            .HasColumnType("timestamp without time zone");
 
         modelBuilder.Entity<Attendance>()
             .HasOne(a => a.ScheduledMatch)
